@@ -207,6 +207,9 @@ type Server interface {
 	// Tip: Not passing any window names will start the server silently
 	// without opening any windows.
 	Start(openWins ...string) error
+
+	// Handler returns a http.ServeMux that handles the gowut-related HTTP traffic.
+	Handler() http.Handler
 }
 
 // Server implementation.

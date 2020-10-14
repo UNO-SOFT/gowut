@@ -44,6 +44,17 @@ func open(url string) error {
 	return exec.Command(cmd, args...).Start()
 }
 
+func (s *serverImpl) Handler() http.Handler {
+	mux := http.NewServeMux()
+	mux.HandleFunc(s.appPath, func(w http.ResponseWriter, r *http.Request) {
+		s.serveHTTP(w, r)
+	})
+	mux.HandleFunc(s.appPath+pathStatic, func(w http.ResponseWriter, r *http.Request) {
+		s.serveStatic(w, r)
+	})
+	return mux
+}
+
 func (s *serverImpl) Start(openWins ...string) error {
 	http.HandleFunc(s.appPath, func(w http.ResponseWriter, r *http.Request) {
 		s.serveHTTP(w, r)
